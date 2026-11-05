@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#10101b" />
+  <title>Bauna Kid vs Nimbu Chatora</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <p class="eyebrow">THE GREAT LAFDA SHOWDOWN</p>
+      <h1>PLAYER <span>SELECTION</span></h1>
+      <p class="sub">Choose your fighter</p>
+    </header>
+
+    <section class="fighters" aria-label="Fighter previews">
+      <article class="fighter-card red">
+        <div class="player-tag">P1</div>
+        <div class="canvas-wrap"><canvas id="fighter-one"></canvas></div>
+        <div class="fighter-info">
+          <h2>BAUNA KID</h2>
+          <p>“Jai Bhavani!”</p>
+          <small>Special: Jai Bhavani Leap</small>
+        </div>
+      </article>
+
+      <div class="versus">VS</div>
+
+      <article class="fighter-card blue">
+        <div class="player-tag">CPU</div>
+        <div class="canvas-wrap"><canvas id="fighter-two"></canvas></div>
+        <div class="fighter-info">
+          <h2>NIMBU CHATORA</h2>
+          <p>“Parth mera beta!”</p>
+          <small>Special: Lemon Blast</small>
+        </div>
+      </article>
+    </section>
+
+    <section class="controls">
+      <div class="control-title">CHARACTER PREVIEW · VERSION 0.1</div>
+      <p>These are original procedural 3D placeholders. Photo-based, detailed GLB models will replace them in the next modelling pass.</p>
+      <button id="pose-button" type="button">PLAY IDLE ANIMATION</button>
+    </section>
+
+    <footer>Single-player vs CPU · Best of 3 rounds · Built for GitHub Pages</footer>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
