@@ -1,10 +1,19 @@
-# The Final Fight of Rishra — Stage 3
-Includes intro title screen, fighter selection, two arena choices (stylized Rishra football ground and school exterior), and a simple single-player vs CPU round prototype.
+# The Final Fight of Rishra — Phase 1
 
-The school and ground are stylized fictional approximations, not exact replicas. Character art is placeholder artwork; detailed photo-based 3D models and cinematic specials are future work.
+Single-player vs CPU, best of three rounds. Includes fighter selection, upcoming-character slots, two Rishra-inspired arena backgrounds, 3D Three.js fighter prototypes, HP and special meters, two special-move sequences, pause/resume/main-menu flow, and mobile controls.
 
-## Update your GitHub repository
-Extract this ZIP. Upload and replace `index.html`, `style.css`, and the entire `src` folder. Commit changes. Keep GitHub Pages set to `main` and `/(root)`.
+## Run / publish
+- Keep the folder structure unchanged.
+- For GitHub Pages, upload `index.html`, `style.css`, `src/`, and `assets/` to the repository root.
+- Three.js is loaded from jsDelivr and Google Fonts from Google Fonts, so those need an internet connection.
 
-## Scope
-Phase 1: single-player vs CPU. No online multiplayer or room codes.
+## Controls
+- Move: A/D or Left/Right arrows
+- Punch: J
+- Kick: K
+- Special: L (meter must be full)
+- Pause: on-screen PAUSE or Escape
+- Mobile: on-screen controls
+
+## Notes
+The two arena images are original stylized game backgrounds. The Stepping Stone School scene is an artistic approximation informed by the school's public prospectus/gallery, not a verified photograph or exact architectural reconstruction. Fighter bodies are procedural 3D game prototypes; face portraits are the reference photos supplied for this project. The gameplay is a prototype and should be play-tested on the target phone/browser before public release.

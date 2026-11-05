@@ -1,6 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>The Final Fight of Rishra</title><link rel="stylesheet" href="style.css"></head><body><main class="app">
-<section id="intro" class="screen intro"><p class="eyebrow">RISHRA'S BIGGEST RIVALRY</p><h1>THE FINAL FIGHT<br><span>OF RISHRA</span></h1><p>Two rivals. One town. One final showdown.</p><button id="start">ENTER THE SHOWDOWN</button></section>
-<section id="select" class="screen hidden"><header><p class="eyebrow">CHOOSE YOUR FIGHTER</p><h1>PLAYER <span>SELECTION</span></h1></header><div class="fighters"><article class="card red"><div class="figure short"><div class="hair"></div><div class="head"></div><div class="body"></div><div class="legs"></div></div><h2>BAUNA KID</h2><p>“Jai Bhavani!”</p><small>Special: Jai Bhavani Leap</small><button data-player="0">SELECT BAUNA KID</button></article><b class="vs">VS</b><article class="card blue"><div class="figure tall"><div class="hair"></div><div class="head"></div><div class="body"></div><div class="legs"></div></div><h2>NIMBU CHATORA</h2><p>“Parth mera beta!”</p><small>Special: Lemon Blast</small><button data-player="1">SELECT NIMBU CHATORA</button></article></div><p class="hint">Choose your fighter. The other one becomes CPU.</p></section>
-<section id="arenas" class="screen hidden"><header><p class="eyebrow">PICK YOUR BATTLEFIELD</p><h1>SELECT <span>ARENA</span></h1></header><div class="arena-grid"><button class="arena-card" data-arena="ground"><div class="art football"><i></i><i></i></div><strong>RISHRA FOOTBALL GROUND</strong><small>Open town playground</small><em>FIGHT HERE</em></button><button class="arena-card" data-arena="school"><div class="art school"><b>STEPPING STONE<br>SCHOOL</b><i></i></div><strong>STEPPING STONE SCHOOL</strong><small>Outside the school entrance</small><em>FIGHT HERE</em></button></div><button class="secondary" id="back">BACK TO FIGHTER SELECT</button></section>
-<section id="fight" class="screen hidden"><div class="hud"><div><b id="pname">BAUNA KID</b><div class="bar"><i id="php"></i></div><small id="pstat">100 HP · WINS 0</small></div><div class="clock"><small id="round">ROUND 1</small><strong id="time">60</strong></div><div><b id="cname">NIMBU CHATORA · CPU</b><div class="bar"><i id="chp"></i></div><small id="cstat">100 HP · WINS 0</small></div></div><div id="stage" class="stage"><div id="stage-title"></div><div id="actors"><span id="player" class="actor">🥊</span><span id="cpu" class="actor">🍋</span></div><strong id="message">FIGHT!</strong></div><p class="desktop">Move A/D or arrows · Punch J · Kick K · Special L · Block Space</p><div class="mobile"><button data-act="left">◀</button><button data-act="right">▶</button><button data-act="punch">PUNCH</button><button data-act="kick">KICK</button><button data-act="special">SPECIAL</button><button data-act="block">BLOCK</button></div><button class="secondary" id="change-arena">CHANGE ARENA</button></section>
-<section id="result" class="screen hidden"><p class="eyebrow">MATCH COMPLETE</p><h1 id="winner">WINNER!</h1><p>Champion of The Final Fight of Rishra!</p><button id="rematch">REMATCH</button><button class="secondary" id="newfight">NEW FIGHT · SELECT CHARACTERS</button></section><footer>PHASE 1 · SINGLE PLAYER VS CPU</footer></main><script type="module" src="src/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#090d1b">
+<title>The Final Fight of Rishra</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+<section id="intro" class="screen intro active">
+  <div class="intro-glow"></div><p class="eyebrow">RISHRA'S BIGGEST RIVALRY</p><h1>THE FINAL FIGHT<br><span>OF RISHRA</span></h1><p class="tagline">Two rivals. One town. One final showdown.</p><button id="startBtn" class="main-btn">ENTER THE SHOWDOWN</button>
+  <div class="intro-bottom">A LOCAL LEGEND IS ABOUT TO BEGIN</div>
+</section>
+<section id="select" class="screen hidden">
+ <header class="screen-head"><p class="eyebrow">CHOOSE YOUR FIGHTER</p><h2>PLAYER <span>SELECTION</span></h2></header>
+ <div class="select-stage">
+  <article class="fighter-select red selected" data-fighter="0"><div class="player-ribbon">PLAYER 1</div><div class="portrait"><img src="assets/bauna-face.jpg" alt="Bauna Kid portrait"></div><div class="fighter-art bauna-art"><div class="art-body"></div><div class="art-head"></div><div class="art-arm left"></div><div class="art-arm right"></div><div class="art-leg left"></div><div class="art-leg right"></div></div><div class="fighter-label"><h3>BAUNA KID</h3><p>“JAI BHAVANI!”</p><small>Special: Jai Bhavani Beam</small></div><button class="select-btn" data-pick="0">SELECT FIGHTER</button></article>
+  <div class="versus-mark">VS</div>
+  <article class="fighter-select blue" data-fighter="1"><div class="player-ribbon">PLAYER 2 · CPU</div><div class="portrait"><img src="assets/nimbu-face.jpg" alt="Nimbu Chatora portrait"></div><div class="fighter-art nimbu-art"><div class="art-body"></div><div class="art-head"></div><div class="art-arm left"></div><div class="art-arm right"></div><div class="art-leg left"></div><div class="art-leg right"></div></div><div class="fighter-label"><h3>NIMBU CHATORA</h3><p>“CHAAT LE!”</p><small>Special: Nimbu Splash</small></div><button class="select-btn" data-pick="1">SELECT FIGHTER</button></article>
+ </div>
+ <div class="coming-soon"><span>?</span><div><b>NEW CHARACTERS COMING SOON</b><small>More Rishra legends are on the way...</small></div><span>?</span><span>?</span><span>?</span></div>
+ <p class="selection-tip">Choose your fighter · The other fighter becomes CPU</p>
+</section>
+<section id="arenas" class="screen hidden">
+ <header class="screen-head"><p class="eyebrow">PICK YOUR BATTLEFIELD</p><h2>SELECT <span>ARENA</span></h2></header>
+ <div class="arena-options">
+  <button class="arena-card" data-arena="ground"><img src="assets/football-ground.png" alt="Rishra football ground"><span class="arena-number">01</span><b>RISHRA FOOTBALL GROUND</b><small>Town playground · Sunset showdown</small><em>FIGHT HERE →</em></button>
+  <button class="arena-card" data-arena="school"><img src="assets/stepping-stone-rishra.png" alt="Stepping Stone School Rishra inspired entrance"><span class="arena-number">02</span><b>STEPPING STONE SCHOOL</b><small>Bangur Park, Rishra</small><em>FIGHT HERE →</em></button>
+ </div><button id="backSelect" class="secondary-btn">← BACK TO CHARACTER SELECT</button>
+</section>
+<section id="fight" class="screen hidden">
+ <div class="fight-top"><div class="hud-side"><b id="pName">BAUNA KID</b><div class="health-track"><i id="pHealth"></i></div><small id="pHp">100 HP</small><div class="special-track"><i id="pSpecial"></i></div><small>SPECIAL</small></div><div class="fight-center"><div id="roundLabel">ROUND 1</div><strong id="timer">60</strong></div><div class="hud-side right"><b id="cName">NIMBU CHATORA · CPU</b><div class="health-track"><i id="cHealth"></i></div><small id="cHp">100 HP</small><div class="special-track"><i id="cSpecial"></i></div><small>SPECIAL</small></div><button id="pauseBtn" class="pause-btn">Ⅱ PAUSE</button></div>
+ <div id="arenaStage" class="arena-stage"><div class="arena-wash"></div><div class="crowd crowd-back"></div><div class="crowd crowd-front"></div><div id="threeRoot"></div><div id="fightCallout">ROUND 1 · FIGHT!</div><div id="arenaName">RISHRA FOOTBALL GROUND</div></div>
+ <div class="fight-controls"><div class="desktop-help">MOVE: A / D or ← / → &nbsp; PUNCH: J &nbsp; KICK: K &nbsp; SPECIAL: L</div><div class="mobile-controls"><button data-action="left">◀</button><button data-action="right">▶</button><button data-action="punch">PUNCH</button><button data-action="kick">KICK</button><button data-action="special" class="special-action">SPECIAL</button></div></div>
+ <div id="pauseOverlay" class="overlay hidden"><div class="pause-card"><p class="eyebrow">MATCH PAUSED</p><h2>TAKE A BREATHER</h2><button id="resumeBtn" class="main-btn">▶ RESUME</button><button id="mainMenuBtn" class="secondary-btn">BACK TO MAIN MENU</button></div></div>
+</section>
+<section id="result" class="screen hidden"><p class="eyebrow">MATCH COMPLETE</p><h2 id="winnerText">BAUNA KID WINS!</h2><p id="resultSub">Champion of The Final Fight of Rishra!</p><button id="rematchBtn" class="main-btn">REMATCH</button><button id="newFightBtn" class="secondary-btn">NEW FIGHT · SELECT CHARACTERS</button></section>
+<footer>PHASE 1 · SINGLE PLAYER VS CPU · BEST OF 3</footer>
+</main>
+<script type="module" src="src/main.js"></script>
+</body></html>
