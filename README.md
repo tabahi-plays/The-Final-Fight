@@ -1,34 +1,33 @@
-# Bauna Kid vs Nimbu Chatora — Stage 1 starter
+# Bauna Kid vs Nimbu Chatora — Stage 2
 
-A GitHub Pages-friendly Three.js character preview prototype.
+This update adds a playable early combat prototype.
 
-## Included
-- Two original procedural 3D placeholder fighters.
-- Bauna Kid is visibly shorter than Nimbu Chatora.
-- Bauna Kid has no earrings.
-- Character definitions are isolated in `src/characters.js` so future fighters can be added.
-- Responsive preview layout for mobile and desktop.
+## Features
+- Choose either fighter; the other becomes CPU.
+- Procedural 3D fighter previews and a 3D arena.
+- Keyboard controls: A/D or arrows to move, J punch, K kick, L special, Space block.
+- Touch controls for mobile.
+- Health bars, 60-second round timer, simple CPU behavior.
+- Best-of-three scoring: first fighter to win two rounds wins.
+- Rematch returns to character selection.
+- Character data is separated in `src/characters.js` for future roster expansion.
+- Phase 1 only: no online multiplayer or room codes.
+
+## Important prototype notes
+- The fighters are procedural placeholder models, not final photo-realistic likeness models.
+- Attacks currently use simple range checks and basic pose changes; this is a gameplay prototype, not a finished commercial fighting engine.
+- Special attacks currently deal 30 damage when the opponent is in range. Character-specific cinematic animation and spoken audio are planned for a later pass.
+- The CPU uses a basic approach-and-attack behavior.
 
 ## Run locally
-Because this project uses JavaScript modules, serve it with a local static server rather than opening `index.html` directly.
-
-For example, with Python installed:
-
+Serve the folder with a static server (ES modules do not work reliably from `file://`):
 ```bash
 python -m http.server 8000
 ```
+Open `http://localhost:8000`.
 
-Then open `http://localhost:8000`.
+## Update GitHub
+Extract the ZIP and upload/replace the project files in the repository. Keep the `src` folder and its contents. Commit the changes, then GitHub Pages will redeploy.
 
-## Publish with GitHub Pages
-1. Create a GitHub repository.
-2. Upload all files and folders in this project.
-3. Open repository **Settings → Pages**.
-4. Choose **Deploy from a branch**, select `main` and `/ (root)`.
-5. Save and wait for the Pages URL.
-
-## Next modelling pass
-Replace the procedural placeholder meshes in `src/main.js` with detailed `.glb` models. The supplied reference photos should only be used for the intended character likeness with the friends' permission. Keep public character names as **Bauna Kid** and **Nimbu Chatora**; do not show their real names in the game UI.
-
-## Scope
-Phase 1 only: single-player vs CPU. No online rooms, multiplayer backend, or room codes.
+## GitHub Pages
+Repository Settings → Pages → Deploy from a branch → `main` → `/ (root)` → Save.

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name="theme-color" content="#10101b" />
   <title>Bauna Kid vs Nimbu Chatora</title>
   <link rel="stylesheet" href="./style.css" />
@@ -11,41 +11,88 @@
   <main class="app">
     <header class="topbar">
       <p class="eyebrow">THE GREAT LAFDA SHOWDOWN</p>
-      <h1>PLAYER <span>SELECTION</span></h1>
-      <p class="sub">Choose your fighter</p>
+      <h1>BAUNA KID <span>VS</span> NIMBU CHATORA</h1>
+      <p class="sub">Single-player arcade prototype · Best of 3 rounds</p>
     </header>
 
-    <section class="fighters" aria-label="Fighter previews">
-      <article class="fighter-card red">
-        <div class="player-tag">P1</div>
-        <div class="canvas-wrap"><canvas id="fighter-one"></canvas></div>
-        <div class="fighter-info">
-          <h2>BAUNA KID</h2>
-          <p>“Jai Bhavani!”</p>
-          <small>Special: Jai Bhavani Leap</small>
-        </div>
-      </article>
-
-      <div class="versus">VS</div>
-
-      <article class="fighter-card blue">
-        <div class="player-tag">CPU</div>
-        <div class="canvas-wrap"><canvas id="fighter-two"></canvas></div>
-        <div class="fighter-info">
-          <h2>NIMBU CHATORA</h2>
-          <p>“Parth mera beta!”</p>
-          <small>Special: Lemon Blast</small>
-        </div>
-      </article>
+    <section id="select-screen">
+      <h2 class="section-title">CHOOSE YOUR FIGHTER</h2>
+      <div class="fighters">
+        <article class="fighter-card red">
+          <div class="player-tag">FIGHTER 01</div>
+          <div class="canvas-wrap"><canvas id="fighter-one"></canvas></div>
+          <div class="fighter-info">
+            <h2>BAUNA KID</h2>
+            <p>“Jai Bhavani!”</p>
+            <small>Special: Jai Bhavani Leap · Shorter & quick</small>
+            <button class="choose-button" data-fighter="0">CHOOSE BAUNA KID</button>
+          </div>
+        </article>
+        <div class="versus">VS</div>
+        <article class="fighter-card blue">
+          <div class="player-tag">FIGHTER 02</div>
+          <div class="canvas-wrap"><canvas id="fighter-two"></canvas></div>
+          <div class="fighter-info">
+            <h2>NIMBU CHATORA</h2>
+            <p>“Parth mera beta!”</p>
+            <small>Special: Lemon Blast · Heavy hitter</small>
+            <button class="choose-button" data-fighter="1">CHOOSE NIMBU CHATORA</button>
+          </div>
+        </article>
+      </div>
+      <p class="selection-note">You control your chosen fighter. The other fighter becomes the CPU opponent.</p>
     </section>
 
-    <section class="controls">
-      <div class="control-title">CHARACTER PREVIEW · VERSION 0.1</div>
-      <p>These are original procedural 3D placeholders. Photo-based, detailed GLB models will replace them in the next modelling pass.</p>
-      <button id="pose-button" type="button">PLAY IDLE ANIMATION</button>
+    <section id="battle-screen" class="hidden">
+      <div class="battle-hud">
+        <div class="health-panel p1">
+          <div class="hud-name" id="player-name">BAUNA KID</div>
+          <div class="health-track"><div id="player-health" class="health-fill"></div></div>
+          <div class="hud-meta"><span id="player-hp-text">100 HP</span><span id="player-rounds">WINS 0</span></div>
+        </div>
+        <div class="round-clock">
+          <div id="round-label">ROUND 1</div>
+          <strong id="timer">60</strong>
+        </div>
+        <div class="health-panel p2">
+          <div class="hud-name" id="cpu-name">NIMBU CHATORA · CPU</div>
+          <div class="health-track"><div id="cpu-health" class="health-fill"></div></div>
+          <div class="hud-meta"><span id="cpu-hp-text">100 HP</span><span id="cpu-rounds">WINS 0</span></div>
+        </div>
+      </div>
+      <div class="arena-wrap">
+        <canvas id="battle-canvas"></canvas>
+        <div id="battle-message" class="battle-message">FIGHT!</div>
+      </div>
+      <div class="battle-bottom">
+        <p class="desktop-help">Move: A / D or ← / → · Punch: J · Kick: K · Special: L · Block: Space</p>
+        <div class="mobile-controls">
+          <div class="move-buttons">
+            <button data-action="left" aria-label="Move left">◀</button>
+            <button data-action="right" aria-label="Move right">▶</button>
+          </div>
+          <div class="attack-buttons">
+            <button data-action="punch">PUNCH</button>
+            <button data-action="kick">KICK</button>
+            <button data-action="special" class="special-button">SPECIAL</button>
+            <button data-action="block">BLOCK</button>
+          </div>
+        </div>
+        <button id="back-button" class="secondary-button">BACK TO CHARACTER SELECT</button>
+      </div>
     </section>
 
-    <footer>Single-player vs CPU · Best of 3 rounds · Built for GitHub Pages</footer>
+    <section id="result-screen" class="hidden result-screen">
+      <p class="eyebrow">MATCH COMPLETE</p>
+      <h2 id="winner-title">BAUNA KID WINS!</h2>
+      <p id="winner-subtitle">The lafda champion has been decided.</p>
+      <div class="result-actions">
+        <button id="rematch-button">REMATCH · NEW CHARACTER SELECT</button>
+        <button id="select-again-button" class="secondary-button">CHARACTER SELECT</button>
+      </div>
+    </section>
+
+    <footer>Phase 1 only · 1 Player vs CPU · GitHub Pages compatible</footer>
   </main>
   <script type="module" src="./src/main.js"></script>
 </body>
