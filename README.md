@@ -1,33 +1,10 @@
-# Bauna Kid vs Nimbu Chatora — Stage 2
+# The Final Fight of Rishra — Stage 3
+Includes intro title screen, fighter selection, two arena choices (stylized Rishra football ground and school exterior), and a simple single-player vs CPU round prototype.
 
-This update adds a playable early combat prototype.
+The school and ground are stylized fictional approximations, not exact replicas. Character art is placeholder artwork; detailed photo-based 3D models and cinematic specials are future work.
 
-## Features
-- Choose either fighter; the other becomes CPU.
-- Procedural 3D fighter previews and a 3D arena.
-- Keyboard controls: A/D or arrows to move, J punch, K kick, L special, Space block.
-- Touch controls for mobile.
-- Health bars, 60-second round timer, simple CPU behavior.
-- Best-of-three scoring: first fighter to win two rounds wins.
-- Rematch returns to character selection.
-- Character data is separated in `src/characters.js` for future roster expansion.
-- Phase 1 only: no online multiplayer or room codes.
+## Update your GitHub repository
+Extract this ZIP. Upload and replace `index.html`, `style.css`, and the entire `src` folder. Commit changes. Keep GitHub Pages set to `main` and `/(root)`.
 
-## Important prototype notes
-- The fighters are procedural placeholder models, not final photo-realistic likeness models.
-- Attacks currently use simple range checks and basic pose changes; this is a gameplay prototype, not a finished commercial fighting engine.
-- Special attacks currently deal 30 damage when the opponent is in range. Character-specific cinematic animation and spoken audio are planned for a later pass.
-- The CPU uses a basic approach-and-attack behavior.
-
-## Run locally
-Serve the folder with a static server (ES modules do not work reliably from `file://`):
-```bash
-python -m http.server 8000
-```
-Open `http://localhost:8000`.
-
-## Update GitHub
-Extract the ZIP and upload/replace the project files in the repository. Keep the `src` folder and its contents. Commit the changes, then GitHub Pages will redeploy.
-
-## GitHub Pages
-Repository Settings → Pages → Deploy from a branch → `main` → `/ (root)` → Save.
+## Scope
+Phase 1: single-player vs CPU. No online multiplayer or room codes.
