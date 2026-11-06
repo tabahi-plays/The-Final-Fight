@@ -1,22 +1,22 @@
-# The Final Fight of Rishra — Combat Upgrade
+# The Final Fight of Rishra — finishing pass
 
-Single-player browser fighting-game prototype (Three.js via CDN).
+Single-player browser fighting game prototype (Three.js via CDN).
+
+## Updates in this build
+- Removed the painted center-circle/line platform geometry; arenas now read as open ground over their background art.
+- Larger fighter-selection portraits and deeper 3D-style silhouettes.
+- Close-range punch/kick hit checks.
+- Punches cause short recoil; two quick consecutive punches trigger a knockdown.
+- Kicks cause a stronger knockback and knockdown with a recovery window.
+- CPU advances into range, retreats when crowded, blocks and attacks.
+- Existing arenas, special attacks, best-of-three, pause and menu flow retained.
 
 ## Controls
-- Move: A / D or Left / Right
+- Move: A/D or Left/Right
 - Punch: J
 - Kick: K
-- Block: hold I (or S)
+- Block: hold I or S
 - Special: L
-- Pause: Escape or the PAUSE button
-- Mobile: on-screen movement, punch, kick, block and special buttons
+- Pause: Escape
 
-## Combat update
-- Punch and kick have separate visible limb animations and timed hit frames.
-- Regular attacks only connect at close range; kicks have slightly longer reach than punches.
-- Hit reactions, knockback/stagger, and a short knockdown after kicks are shown.
-- CPU approaches, adjusts distance, attacks, sometimes retreats, and blocks.
-- Character portraits are used on the 3D head panels, with added facial details and distinct body proportions.
-- Existing arenas, health/special meters, special attacks, pause flow and best-of-three match are retained.
-
-Run through GitHub Pages or a local web server. The Three.js module is loaded from jsDelivr, so an internet connection is required.
+Open `index.html` through GitHub Pages or a local static server. Internet access is needed for the Three.js CDN module.
