@@ -21,3 +21,10 @@
 .arena-stage{border-radius:10px;box-shadow:0 12px 40px #0007}
 .arena-stage:before{background:linear-gradient(0deg,#10152322,#0b142008)}
 @media(max-width:720px){.portrait{width:120px;height:150px;top:46px;border-radius:18px}.fighter-art{transform:translateX(-50%) scale(.72);transform-origin:bottom center}.fighter-label{bottom:140px}.fighter-label h3{font-size:24px}}
+
+/* Clean character selection: use the real supplied portraits, not CSS mannequin placeholders. */
+.select-stage{align-items:stretch;gap:26px}.fighter-select{height:490px;min-height:420px;overflow:hidden;background:#111827!important;position:relative}.fighter-select:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07101a00 20%,#07101a55 55%,#07101af2 100%);z-index:2;pointer-events:none}.fighter-select .portrait{position:absolute;inset:0;width:100%;height:100%;top:0;left:0;border:0;border-radius:0;box-shadow:none;background:#172333}.fighter-select .portrait img{width:100%;height:100%;object-fit:cover;object-position:center 24%;filter:contrast(1.04) saturate(1.06)}.fighter-label{z-index:4;bottom:92px!important;background:linear-gradient(0deg,#070b16f5,#070b1600)!important;padding:55px 8px 12px!important}.fighter-label h3{font-size:clamp(26px,3vw,42px)!important}.select-btn{z-index:5}.player-ribbon{z-index:5}
+/* No framed rectangle/platform around the arena: let the arena artwork fill the fight area. */
+.arena-stage{border:0!important;border-radius:0!important;box-shadow:none!important;background-color:transparent!important;overflow:hidden;height:min(66vh,680px);min-height:420px}
+.arena-stage:before{display:none!important}.arena-wash{display:none!important}#threeRoot{inset:0!important}
+@media(max-width:720px){.select-stage{gap:8px}.fighter-select{height:390px;min-height:390px}.fighter-label{bottom:82px!important}.arena-stage{height:54vh;min-height:340px}}

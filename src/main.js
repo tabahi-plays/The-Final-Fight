@@ -12,17 +12,15 @@ $('rematchBtn').onclick=()=>startMatch();$('newFightBtn').onclick=()=>{stopScene
 function mat(color,roughness=.7){return new THREE.MeshStandardMaterial({color,roughness});}
 function makeFighter(data,x,isCpu=false){
  const root=new THREE.Group(),skin=mat(0xb97858),cloth=mat(data.top),dark=mat(0x20283a),shoe=mat(0xe8e8e8),hairMat=mat(0x171820);
- const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.39,.66,6,12),cloth);torso.position.y=1.45;root.add(torso);
+ const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.43,.68,8,16),cloth);torso.scale.set(1.08,1,.82);torso.position.y=1.45;root.add(torso);
  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.12,.14,.22,12),skin);neck.position.y=1.98;root.add(neck);
  const headGroup=new THREE.Group();headGroup.position.y=2.32;root.add(headGroup);
- const head=new THREE.Mesh(new THREE.SphereGeometry(.36,32,24),skin);head.scale.set(.88,1.08,.84);headGroup.add(head);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.36,32,24),skin);head.scale.set(.92,1.08,.9);headGroup.add(head);
  const hair=new THREE.Mesh(new THREE.SphereGeometry(.37,24,18),hairMat);hair.scale.set(.96,.52,.91);hair.position.set(0,.22,-.015);headGroup.add(hair);
  // Use the supplied portrait as a curved, forward-facing face panel, with visible facial structure around it.
  const tex=new THREE.TextureLoader().load(data.face);tex.colorSpace=THREE.SRGBColorSpace;
- const face=new THREE.Mesh(new THREE.PlaneGeometry(.58,.66),new THREE.MeshBasicMaterial({map:tex,transparent:false,side:THREE.DoubleSide}));face.position.set(0,-.005,.312);headGroup.add(face);
- const brow=mat(0x302019),eye=mat(0x171313),white=mat(0xfff3e7),nose=mat(0x9d6048),mouth=mat(0x572b2a);
- for(const s of [-1,1]){const b=new THREE.Mesh(new THREE.BoxGeometry(.12,.025,.025),brow);b.position.set(s*.115,.105,.324);headGroup.add(b);const e=new THREE.Mesh(new THREE.SphereGeometry(.027,10,8),white);e.position.set(s*.105,.065,.337);headGroup.add(e);const pupil=new THREE.Mesh(new THREE.SphereGeometry(.013,8,8),eye);pupil.position.set(s*.105,.063,.36);headGroup.add(pupil);}
- const ns=new THREE.Mesh(new THREE.SphereGeometry(.045,12,10),nose);ns.scale.set(.7,1,.55);ns.position.set(0,-.045,.34);headGroup.add(ns);const mo=new THREE.Mesh(new THREE.BoxGeometry(.105,.018,.018),mouth);mo.position.set(0,-.15,.335);headGroup.add(mo);
+ const faceGeo=new THREE.PlaneGeometry(.49,.68,18,24);const pos=faceGeo.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),y=pos.getY(i);pos.setZ(i,.075*(1-(x/.245)**2)+.018*(1-(y/.34)**2));}faceGeo.computeVertexNormals();const face=new THREE.Mesh(faceGeo,new THREE.MeshStandardMaterial({map:tex,roughness:.82,side:THREE.DoubleSide}));face.position.set(0,-.005,.315);headGroup.add(face);
+ const earMat=skin;for(const side of [-1,1]){const ear=new THREE.Mesh(new THREE.SphereGeometry(.085,16,12),earMat);ear.scale.set(.62,1,.55);ear.position.set(side*.315,-.015,.005);headGroup.add(ear);}const jaw=new THREE.Mesh(new THREE.SphereGeometry(.255,24,18),skin);jaw.scale.set(.92,.52,.72);jaw.position.set(0,-.245,.055);headGroup.add(jaw);
  const arms=[],legs=[];
  for(const side of [-1,1]){
   const armPivot=new THREE.Group();armPivot.position.set(side*.46,1.78,0);root.add(armPivot);
@@ -40,7 +38,8 @@ function makeFighter(data,x,isCpu=false){
  root.userData={arms,legs,torso,headGroup,baseY:0,attack:null,hitUntil:0,downUntil:0,block:false,step:0,isCpu};return root;
 }
 function setupScene(){const host=$('threeRoot');host.innerHTML='';scene=new THREE.Scene();const h=host.clientHeight||420;camera=new THREE.PerspectiveCamera(42,host.clientWidth/h,.1,100);camera.position.set(0,4.05,10.5);camera.lookAt(0,1.35,0);renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(host.clientWidth,h);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x46506c,2.1));const sun=new THREE.DirectionalLight(0xffffff,2.4);sun.position.set(-3,8,6);sun.castShadow=true;scene.add(sun);
- const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,18),mat(arena==='ground'?0x46683b:0x777d88,.98));ground.rotation.x=-Math.PI/2;ground.position.y=-.08;ground.receiveShadow=true;scene.add(ground);
+ // No raised platform or rectangular floor mesh: the arena artwork itself supplies the ground. Add only soft foot shadows.
+ const shadowMat=new THREE.MeshBasicMaterial({color:0x05070b,transparent:true,opacity:.28,depthWrite:false});for(const x of [-1.8,1.8]){const sh=new THREE.Mesh(new THREE.CircleGeometry(.48,32),shadowMat);sh.rotation.x=-Math.PI/2;sh.position.set(x,.012,.12);sh.scale.set(1.45,.72,1);scene.add(sh);}
  playerModel=makeFighter(fighters[selected],-1.8,false);cpuModel=makeFighter(fighters[1-selected],1.8,true);playerModel.rotation.y=.12;cpuModel.rotation.y=-.12;scene.add(playerModel,cpuModel);
  beam=new THREE.Mesh(new THREE.CylinderGeometry(.12,.28,5.4,16),new THREE.MeshBasicMaterial({color:0xffef7a,transparent:true,opacity:0,emissive:0xffc82e}));beam.rotation.z=Math.PI/2;beam.position.set(0,2.3,0);scene.add(beam);
  splash=new THREE.Group();const lemon=new THREE.Mesh(new THREE.SphereGeometry(.45,20,16),mat(0xffdf21));lemon.scale.set(1.35,.7,.8);splash.add(lemon);for(let i=0;i<16;i++){const bit=new THREE.Mesh(new THREE.SphereGeometry(.13,10,8),new THREE.MeshBasicMaterial({color:0xffe84d}));const a=i/16*Math.PI*2;bit.position.set(Math.cos(a)*(.7+Math.random()*.35),Math.sin(a)*(.6+Math.random()*.35),0);splash.add(bit);}splash.visible=false;scene.add(splash);
@@ -112,11 +111,11 @@ function loop(){if(!renderer||!game)return;raf=requestAnimationFrame(loop);const
  const d=game.cx-game.px,abs=Math.abs(d);playerModel.rotation.y=d>0?.16:-.16;cpuModel.rotation.y=d<0?-.16:.16;
  // CPU advances into striking range, retreats after pressure, blocks and chooses punches/kicks.
  const cpu=cpuModel.userData;if(now>game.lastCpuMove){game.lastCpuMove=now+220+Math.random()*220;const r=Math.random();if(abs<1.35&&r<.24){cpu.block=true;cpu.blockUntil=now+450+Math.random()*350;}else if(r<.12&&abs<1.7){game.cx+=Math.sign(d)*.45;}else cpu.block=false;}
- if(abs>1.12){game.cx-=Math.sign(d)*Math.min(abs-1.08,dt*1.8);}else if(abs<.82){game.cx+=Math.sign(d)*dt*.9;}
+ if(abs>1.28){game.cx-=Math.sign(d)*Math.min(abs-1.18,dt*1.55);}else if(abs<.92){game.cx+=Math.sign(d)*dt*1.25;}
  game.cx=Math.max(-3.8,Math.min(3.8,game.cx));if(cpu.blockUntil&&now>cpu.blockUntil)cpu.block=false;
  if(game.cs>=100&&abs<3.1&&!game.specialBusy&&Math.random()<.004){special('c');}else if(abs<1.72&&now-game.lastCpu>720+Math.random()*350&&!game.specialBusy){game.lastCpu=now;triggerAttack('c',Math.random()<.48?'kick':'punch');}
  game.cs=Math.min(100,game.cs+dt*.8);game.ps=Math.min(100,game.ps+dt*.5);
- game.px=Math.max(-3.8,Math.min(3.8,playerModel.position.x));game.cx=Math.max(-3.8,Math.min(3.8,cpuModel.position.x));if(playerModel.userData.knockback){game.px+=playerModel.userData.knockback;playerModel.userData.knockback*=.78;if(Math.abs(playerModel.userData.knockback)<.018)playerModel.userData.knockback=0;}if(cpuModel.userData.knockback){game.cx+=cpuModel.userData.knockback;cpuModel.userData.knockback*=.78;if(Math.abs(cpuModel.userData.knockback)<.018)cpuModel.userData.knockback=0;}game.px=Math.max(-3.8,Math.min(3.8,game.px));game.cx=Math.max(-3.8,Math.min(3.8,game.cx));playerModel.position.x=game.px;cpuModel.position.x=game.cx;
+ if(playerModel.userData.knockback){game.px+=playerModel.userData.knockback;playerModel.userData.knockback*=.78;if(Math.abs(playerModel.userData.knockback)<.018)playerModel.userData.knockback=0;}if(cpuModel.userData.knockback){game.cx+=cpuModel.userData.knockback;cpuModel.userData.knockback*=.78;if(Math.abs(cpuModel.userData.knockback)<.018)cpuModel.userData.knockback=0;}game.px=Math.max(-3.8,Math.min(3.8,game.px));game.cx=Math.max(-3.8,Math.min(3.8,game.cx));playerModel.position.x=game.px;cpuModel.position.x=game.cx;
  animateFighter(playerModel,now,dt,!!move);animateFighter(cpuModel,now,dt,Math.abs(game.cx-(game._prevCx??game.cx))>.002);game._prevCx=game.cx;
  if(now-lastHud>100){hud();lastHud=now;}}
  renderer.render(scene,camera);}
