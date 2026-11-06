@@ -28,3 +28,9 @@
 .arena-stage{border:0!important;border-radius:0!important;box-shadow:none!important;background-color:transparent!important;overflow:hidden;height:min(66vh,680px);min-height:420px}
 .arena-stage:before{display:none!important}.arena-wash{display:none!important}#threeRoot{inset:0!important}
 @media(max-width:720px){.select-stage{gap:8px}.fighter-select{height:390px;min-height:390px}.fighter-label{bottom:82px!important}.arena-stage{height:54vh;min-height:340px}}
+
+/* Portrait framing: preserve the complete original face photo instead of zoom-cropping it. */
+.fighter-select .portrait{background:linear-gradient(145deg,#18263b,#070d18)!important;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.fighter-select .portrait img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;filter:none!important;background:transparent}
+.fighter-select:before{background:linear-gradient(180deg,#07101a00 35%,#07101a55 68%,#07101af2 100%)!important}
+@media(max-width:720px){.fighter-select .portrait img{object-fit:contain!important}}

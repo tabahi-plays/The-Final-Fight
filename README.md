@@ -20,3 +20,12 @@ Single-player browser fighting game prototype (Three.js via CDN).
 - Pause: Escape
 
 Open `index.html` through GitHub Pages or a local static server. Internet access is needed for the Three.js CDN module.
+
+## Voice lines (add your own MP3 files)
+Place these files in `assets/audio/`:
+- `bauna-intro.mp3`
+- `nimbu-intro.mp3`
+- `bauna-win.mp3`
+- `nimbu-win.mp3`
+
+Match intro order: selected fighter voice -> CPU voice -> 3, 2, 1, FIGHT. The winner's individual voice plays after the final result. Missing MP3s are skipped with a short delay so the match still starts.
