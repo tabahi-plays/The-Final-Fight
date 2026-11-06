@@ -1,19 +1,22 @@
-# The Final Fight of Rishra — Phase 1
+# The Final Fight of Rishra — Combat Upgrade
 
-Single-player vs CPU, best of three rounds. Includes fighter selection, upcoming-character slots, two Rishra-inspired arena backgrounds, 3D Three.js fighter prototypes, HP and special meters, two special-move sequences, pause/resume/main-menu flow, and mobile controls.
-
-## Run / publish
-- Keep the folder structure unchanged.
-- For GitHub Pages, upload `index.html`, `style.css`, `src/`, and `assets/` to the repository root.
-- Three.js is loaded from jsDelivr and Google Fonts from Google Fonts, so those need an internet connection.
+Single-player browser fighting-game prototype (Three.js via CDN).
 
 ## Controls
-- Move: A/D or Left/Right arrows
+- Move: A / D or Left / Right
 - Punch: J
 - Kick: K
-- Special: L (meter must be full)
-- Pause: on-screen PAUSE or Escape
-- Mobile: on-screen controls
+- Block: hold I (or S)
+- Special: L
+- Pause: Escape or the PAUSE button
+- Mobile: on-screen movement, punch, kick, block and special buttons
 
-## Notes
-The two arena images are original stylized game backgrounds. The Stepping Stone School scene is an artistic approximation informed by the school's public prospectus/gallery, not a verified photograph or exact architectural reconstruction. Fighter bodies are procedural 3D game prototypes; face portraits are the reference photos supplied for this project. The gameplay is a prototype and should be play-tested on the target phone/browser before public release.
+## Combat update
+- Punch and kick have separate visible limb animations and timed hit frames.
+- Regular attacks only connect at close range; kicks have slightly longer reach than punches.
+- Hit reactions, knockback/stagger, and a short knockdown after kicks are shown.
+- CPU approaches, adjusts distance, attacks, sometimes retreats, and blocks.
+- Character portraits are used on the 3D head panels, with added facial details and distinct body proportions.
+- Existing arenas, health/special meters, special attacks, pause flow and best-of-three match are retained.
+
+Run through GitHub Pages or a local web server. The Three.js module is loaded from jsDelivr, so an internet connection is required.
