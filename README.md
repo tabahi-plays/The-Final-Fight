@@ -29,3 +29,15 @@ Place these files in `assets/audio/`:
 - `nimbu-win.mp3`
 
 Match intro order: selected fighter voice -> CPU voice -> 3, 2, 1, FIGHT. The winner's individual voice plays after the final result. Missing MP3s are skipped with a short delay so the match still starts.
+
+
+## Balance update
+- Health is 200 per fighter.
+- Punch damage: 6 HP. Kick damage: 10 HP.
+- CPU attack cadence is slower with more blocking and retreat windows.
+- Bauna Kid special: power-up, high kick, airborne knockdown, 60 HP damage.
+- Nimbu Chatora special: slow rise, lemon splash, 4-second paneer transformation, 60 HP damage.
+- Character selection portraits use a larger, uncropped contain frame.
+
+Special audio files belong in `assets/audio/`:
+`bauna-intro.mp3`, `nimbu-intro.mp3`, `bauna-win.mp3`, `nimbu-win.mp3`.

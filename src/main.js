@@ -49,8 +49,8 @@ function setupScene(){const host=$('threeRoot');host.innerHTML='';scene=new THRE
  clock=new THREE.Clock();window.addEventListener('resize',resizeScene);}
 function resizeScene(){if(!renderer)return;const h=$('threeRoot');camera.aspect=h.clientWidth/h.clientHeight;camera.updateProjectionMatrix();renderer.setSize(h.clientWidth,h.clientHeight);}
 function stopScene(){stopVoice();if(raf)cancelAnimationFrame(raf);raf=0;if(renderer){renderer.dispose();renderer.domElement.remove();}renderer=null;scene=null;window.removeEventListener('resize',resizeScene);}
-async function startMatch(){stopScene();paused=true;$('pauseOverlay').classList.add('hidden');show('fight');game={ph:100,ch:100,ps:25,cs:25,pwins:0,cwins:0,round:1,time:60,over:false,intro:true,px:-1.8,cx:1.8,lastCpu:0,lastCpuMove:0,specialBusy:false,hitFlash:0};$('pName').textContent=fighters[selected].name;$('cName').textContent=fighters[1-selected].name+' · CPU';$('arenaName').textContent=arena==='ground'?'RISHRA FOOTBALL GROUND':'STEPPING STONE SCHOOL · RISHRA';$('arenaStage').style.backgroundImage=`url('${arena==='ground'?'assets/football-ground.png':'assets/stepping-stone-rishra.png'}')`;setupScene();hud();loop();const token=audioToken;callout(fighters[selected].name+'!');await playVoice(selected===0?'bauna-intro.mp3':'nimbu-intro.mp3',token);if(token!==audioToken||!game)return;callout(fighters[1-selected].name+' · CPU!');await playVoice(selected===0?'nimbu-intro.mp3':'bauna-intro.mp3',token);if(token!==audioToken||!game)return;for(const n of ['3','2','1','FIGHT!']){callout(n);await wait(n==='FIGHT!'?350:700);if(token!==audioToken||!game)return;}game.intro=false;paused=false;clock.getDelta();callout('ROUND 1 · FIGHT!');}
-function hud(){$('pHealth').style.width=game.ph+'%';$('cHealth').style.width=game.ch+'%';$('pHp').textContent=Math.ceil(game.ph)+' HP';$('cHp').textContent=Math.ceil(game.ch)+' HP';$('pSpecial').style.width=game.ps+'%';$('cSpecial').style.width=game.cs+'%';$('roundLabel').textContent='ROUND '+game.round;$('timer').textContent=Math.ceil(game.time);}
+async function startMatch(){stopScene();paused=true;$('pauseOverlay').classList.add('hidden');show('fight');game={ph:200,ch:200,ps:25,cs:25,pwins:0,cwins:0,round:1,time:60,over:false,intro:true,px:-1.8,cx:1.8,lastCpu:0,lastCpuMove:0,specialBusy:false,hitFlash:0};$('pName').textContent=fighters[selected].name;$('cName').textContent=fighters[1-selected].name+' · CPU';$('arenaName').textContent=arena==='ground'?'RISHRA FOOTBALL GROUND':'STEPPING STONE SCHOOL · RISHRA';$('arenaStage').style.backgroundImage=`url('${arena==='ground'?'assets/football-ground.png':'assets/stepping-stone-rishra.png'}')`;setupScene();hud();loop();const token=audioToken;callout(fighters[selected].name+'!');await playVoice(selected===0?'bauna-intro.mp3':'nimbu-intro.mp3',token);if(token!==audioToken||!game)return;callout(fighters[1-selected].name+' · CPU!');await playVoice(selected===0?'nimbu-intro.mp3':'bauna-intro.mp3',token);if(token!==audioToken||!game)return;for(const n of ['3','2','1','FIGHT!']){callout(n);await wait(n==='FIGHT!'?350:700);if(token!==audioToken||!game)return;}game.intro=false;paused=false;clock.getDelta();callout('ROUND 1 · FIGHT!');}
+function hud(){$('pHealth').style.width=(game.ph/200*100)+'%';$('cHealth').style.width=(game.ch/200*100)+'%';$('pHp').textContent=Math.ceil(game.ph)+' HP';$('cHp').textContent=Math.ceil(game.ch)+' HP';$('pSpecial').style.width=game.ps+'%';$('cSpecial').style.width=game.cs+'%';$('roundLabel').textContent='ROUND '+game.round;$('timer').textContent=Math.ceil(game.time);}
 function callout(t){$('fightCallout').textContent=t;$('fightCallout').classList.remove('pop');void $('fightCallout').offsetWidth;$('fightCallout').classList.add('pop');}
 function pause(){if(!game||game.over||game.intro)return;paused=true;$('pauseOverlay').classList.remove('hidden');}
 function resume(){paused=false;$('pauseOverlay').classList.add('hidden');clock.getDelta();}
@@ -62,7 +62,7 @@ function triggerAttack(who,type){
  const au=attacker.userData,du=defender.userData;
  if((au.attack&&now<au.attack.until)||now<au.hitUntil||now<au.downUntil)return;
  au.attack={type,started:now,until:now+(type==='kick'?680:440),hit:false};au.block=false;
- const defending=du.block&&Math.random()<.78,base=type==='kick'?13:8,dmg=defending?Math.round(base*.22):base;
+ const defending=du.block&&Math.random()<.72,base=type==='kick'?10:6,dmg=defending?Math.max(1,Math.round(base*.25)):base;
  const impactDelay=type==='kick'?300:190;
  setTimeout(()=>{
   if(!game||game.over||!au.attack||au.attack.hit)return;
@@ -88,11 +88,62 @@ function triggerAttack(who,type){
 }
 
 function action(type){if(!game||game.over||paused||game.specialBusy)return;if(type==='special'){special('p');return;}if(type==='block'){playerModel.userData.block=true;return;}triggerAttack('p',type);}
-function special(who){const isP=who==='p',meter=isP?'ps':'cs';if(game[meter]<100||game.specialBusy)return;game[meter]=0;game.specialBusy=true;hud();const attacker=isP?playerModel:cpuModel,defender=isP?cpuModel:playerModel;attacker.userData.attack={type:'special',started:performance.now(),until:performance.now()+1800,hit:true};const fighterIndex=isP?selected:1-selected,name=fighters[fighterIndex].name;
- if(fighterIndex===0){callout('JAI BHAVANI!');beam.material.opacity=.95;beam.position.set((attacker.position.x+defender.position.x)/2,2.3,0);setTimeout(()=>{beam.material.opacity=0;},850);}
- else{callout('NIMBU SPLASH!');splash.visible=true;splash.position.set((attacker.position.x+defender.position.x)/2,2.1,.2);splash.scale.set(.2,.2,.2);defender.visible=false;const paneer=new THREE.Group();for(let i=0;i<12;i++){const cube=new THREE.Mesh(new THREE.BoxGeometry(.27,.22,.22),mat(0xfff0cf));cube.position.set((Math.random()-.5)*1.1,Math.random()*.9,(Math.random()-.5)*.45);paneer.add(cube);}scene.add(paneer);splash.userData.paneer=paneer;}
- let t=0;const anim=()=>{if(!game)return;t+=.06;attacker.position.y=Math.max(0,1.65-Math.abs(Math.sin(t))*1.1);attacker.rotation.z=Math.sin(t)*.12;if(splash.visible){splash.scale.setScalar(Math.min(1.7,.2+t*.16));splash.position.y=2+Math.sin(t)*.12;}if(t<1.8)requestAnimationFrame(anim);else{attacker.position.y=0;attacker.rotation.z=0;splash.visible=false;if(splash.userData.paneer){scene.remove(splash.userData.paneer);splash.userData.paneer=null;defender.visible=true;}setTimeout(()=>{if(!game)return;if(isP)game.ch=Math.max(0,game.ch-30);else game.ph=Math.max(0,game.ph-30);game.specialBusy=false;attacker.userData.attack=null;hud();callout(name+' SPECIAL · -30 HP');if(game.ch<=0)roundWin('p');if(game.ph<=0)roundWin('c');},fighterIndex===1?2000:0);}};anim();}
-function roundWin(winner){if(game.over)return;game.over=true;if(winner==='p')game.pwins++;else game.cwins++;callout((winner==='p'?fighters[selected].name:fighters[1-selected].name)+' WINS ROUND '+game.round);setTimeout(async()=>{if(!game)return;if(game.pwins===2||game.cwins===2){const playerWon=game.pwins>game.cwins,winnerIndex=playerWon?selected:1-selected;stopScene();show('result');$('winnerText').textContent=fighters[winnerIndex].name+' WINS!';$('resultSub').textContent=`FINAL SCORE ${game.pwins} — ${game.cwins} · Champion of Rishra`;const token=audioToken;await playVoice(winnerIndex===0?'bauna-win.mp3':'nimbu-win.mp3',token);return;}game.round++;game.ph=game.ch=100;game.ps=game.cs=25;game.time=60;game.over=false;game.px=-1.8;game.cx=1.8;playerModel.position.set(-1.8,0,0);cpuModel.position.set(1.8,0,0);hud();callout('ROUND '+game.round+' · FIGHT!');},1600);}
+function special(who){
+ if(!game||game.over||paused)return;
+ const isP=who==='p',meter=isP?'ps':'cs';
+ if(game[meter]<100||game.specialBusy)return;
+ game[meter]=0;game.specialBusy=true;hud();
+ const attacker=isP?playerModel:cpuModel,defender=isP?cpuModel:playerModel;
+ const fighterIndex=isP?selected:1-selected,name=fighters[fighterIndex].name;
+ const au=attacker.userData,du=defender.userData,originX=attacker.position.x;
+ au.attack={type:'special',started:performance.now(),until:performance.now()+3600,hit:true};
+ const side=isP?1:-1;
+ const pauseFrames=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ const animate=(duration,fn)=>new Promise(resolve=>{
+  const begin=performance.now();
+  const tick=now=>{if(!game){resolve();return;}const p=Math.min(1,(now-begin)/duration);fn(p);if(p<1)requestAnimationFrame(tick);else resolve();};
+  requestAnimationFrame(tick);
+ });
+ if(fighterIndex===0){
+  callout('JAI BHAVANI! · HIGH KICK');
+  // Power-up: grow noticeably before the high kick.
+  await animate(700,p=>{const s=1+0.48*Math.sin(p*Math.PI/2);attacker.scale.setScalar(s*(fighters[fighterIndex].short?.88:1.03));attacker.position.y=.08*Math.sin(p*Math.PI);});
+  await animate(500,p=>{const leg=au.legs[1];leg.rotation.z=-1.9*p;attacker.rotation.z=-.08*p;});
+  defender.userData.block=false;defender.userData.attack=null;
+  defender.userData.hitUntil=performance.now()+450;
+  defender.userData.downUntil=performance.now()+1450;
+  defender.userData.fallSide=side;
+  defender.userData.knockback=side*1.65;
+  game.ch=Math.max(0,game.ch-60);game.ps=Math.min(100,game.ps+18);
+  callout('HIGH KICK! · AIRBORNE KNOCKDOWN');
+  await animate(420,p=>{au.legs[1].rotation.z=-1.9*(1-p);});
+  await pauseFrames(250);
+  attacker.scale.set(fighters[fighterIndex].short?.88:1.03,fighters[fighterIndex].short?.88:1.03,fighters[fighterIndex].short?.88:1.03);
+  attacker.position.y=0;attacker.rotation.z=0;au.legs[1].rotation.z=0;
+ }else{
+  callout('NIMBU SPLASH! · LIFT OFF');
+  splash.visible=true;splash.position.set(attacker.position.x,2.25,.25);splash.scale.setScalar(.12);
+  // Slow, controlled rise, pause at the apex, then splash.
+  await animate(1250,p=>{attacker.position.y=1.35*p;splash.position.y=2.2+1.25*p;splash.scale.setScalar(.12+.2*p);});
+  await pauseFrames(350);
+  callout('LEMON SPLASH!');
+  await animate(650,p=>{splash.scale.setScalar(.32+1.35*p);splash.position.x=attacker.position.x+side*(.6+p*.45);});
+  defender.visible=false;
+  const paneer=new THREE.Group();
+  for(let i=0;i<14;i++){const cube=new THREE.Mesh(new THREE.BoxGeometry(.24,.2,.2),mat(0xfff0cf));cube.position.set((Math.random()-.5)*1.15,Math.random()*.95,(Math.random()-.5)*.5);cube.rotation.set(Math.random(),Math.random(),Math.random());paneer.add(cube);}
+  paneer.position.set(defender.position.x,0,.2);scene.add(paneer);
+  game.ch=Math.max(0,game.ch-60);game.ps=Math.min(100,game.ps+18);hud();
+  callout('PANEER TRANSFORMATION · 4 SECONDS');
+  await pauseFrames(4000);
+  scene.remove(paneer);defender.visible=true;splash.visible=false;
+  await animate(850,p=>{attacker.position.y=1.35*(1-p);});
+  attacker.position.y=0;
+ }
+ splash.visible=false;attacker.position.y=0;attacker.rotation.z=0;attacker.scale.set(fighters[fighterIndex].short?.88:1.03,fighters[fighterIndex].short?.88:1.03,fighters[fighterIndex].short?.88:1.03);
+ au.attack=null;game.specialBusy=false;hud();callout(name+' SPECIAL · -60 HP');
+ if(game.ch<=0)roundWin('p');if(game.ph<=0)roundWin('c');
+}
+function roundWin(winner){if(game.over)return;game.over=true;if(winner==='p')game.pwins++;else game.cwins++;callout((winner==='p'?fighters[selected].name:fighters[1-selected].name)+' WINS ROUND '+game.round);setTimeout(async()=>{if(!game)return;if(game.pwins===2||game.cwins===2){const playerWon=game.pwins>game.cwins,winnerIndex=playerWon?selected:1-selected;stopScene();show('result');$('winnerText').textContent=fighters[winnerIndex].name+' WINS!';$('resultSub').textContent=`FINAL SCORE ${game.pwins} — ${game.cwins} · Champion of Rishra`;const token=audioToken;await playVoice(winnerIndex===0?'bauna-win.mp3':'nimbu-win.mp3',token);return;}game.round++;game.ph=game.ch=200;game.ps=game.cs=25;game.time=90;game.over=false;game.px=-1.8;game.cx=1.8;playerModel.position.set(-1.8,0,0);cpuModel.position.set(1.8,0,0);hud();callout('ROUND '+game.round+' · FIGHT!');},1600);}
 function animateFighter(model,now,dt,walking){
  const u=model.userData;u.step+=dt*(walking?9:2);u.arms.forEach(a=>a.rotation.set(0,0,0));u.legs.forEach(l=>l.rotation.set(0,0,0));
  
@@ -113,11 +164,11 @@ function loop(){if(!renderer||!game)return;raf=requestAnimationFrame(loop);const
  const move=(keys.ArrowLeft||keys.KeyA?-1:0)+(keys.ArrowRight||keys.KeyD?1:0);game.px=Math.max(-3.8,Math.min(3.8,game.px+move*dt*3.1));
  const d=game.cx-game.px,abs=Math.abs(d);playerModel.rotation.y=d>0?.16:-.16;cpuModel.rotation.y=d<0?-.16:.16;
  // CPU advances into striking range, retreats after pressure, blocks and chooses punches/kicks.
- const cpu=cpuModel.userData;if(now>game.lastCpuMove){game.lastCpuMove=now+220+Math.random()*220;const r=Math.random();if(abs<1.35&&r<.24){cpu.block=true;cpu.blockUntil=now+450+Math.random()*350;}else if(r<.12&&abs<1.7){game.cx+=Math.sign(d)*.45;}else cpu.block=false;}
- if(abs>1.28){game.cx-=Math.sign(d)*Math.min(abs-1.18,dt*1.55);}else if(abs<.92){game.cx+=Math.sign(d)*dt*1.25;}
+ const cpu=cpuModel.userData;if(now>game.lastCpuMove){game.lastCpuMove=now+520+Math.random()*520;const r=Math.random();if(abs<1.35&&r<.42){cpu.block=true;cpu.blockUntil=now+450+Math.random()*350;}else if(r<.22&&abs<1.7){game.cx+=Math.sign(d)*.45;}else cpu.block=false;}
+ if(abs>1.55){game.cx-=Math.sign(d)*Math.min(abs-1.42,dt*.95);}else if(abs<1.12){game.cx+=Math.sign(d)*dt*.8;}
  game.cx=Math.max(-3.8,Math.min(3.8,game.cx));if(cpu.blockUntil&&now>cpu.blockUntil)cpu.block=false;
- if(game.cs>=100&&abs<3.1&&!game.specialBusy&&Math.random()<.004){special('c');}else if(abs<1.72&&now-game.lastCpu>720+Math.random()*350&&!game.specialBusy){game.lastCpu=now;triggerAttack('c',Math.random()<.48?'kick':'punch');}
- game.cs=Math.min(100,game.cs+dt*.8);game.ps=Math.min(100,game.ps+dt*.5);
+ if(game.cs>=100&&abs<3.1&&!game.specialBusy&&Math.random()<.004){special('c');}else if(abs<1.62&&now-game.lastCpu>1450+Math.random()*850&&!game.specialBusy){game.lastCpu=now;triggerAttack('c',Math.random()<.38?'kick':'punch');}
+ game.cs=Math.min(100,game.cs+dt*.42);game.ps=Math.min(100,game.ps+dt*.32);
  if(playerModel.userData.knockback){game.px+=playerModel.userData.knockback;playerModel.userData.knockback*=.78;if(Math.abs(playerModel.userData.knockback)<.018)playerModel.userData.knockback=0;}if(cpuModel.userData.knockback){game.cx+=cpuModel.userData.knockback;cpuModel.userData.knockback*=.78;if(Math.abs(cpuModel.userData.knockback)<.018)cpuModel.userData.knockback=0;}game.px=Math.max(-3.8,Math.min(3.8,game.px));game.cx=Math.max(-3.8,Math.min(3.8,game.cx));playerModel.position.x=game.px;cpuModel.position.x=game.cx;
  animateFighter(playerModel,now,dt,!!move);animateFighter(cpuModel,now,dt,Math.abs(game.cx-(game._prevCx??game.cx))>.002);game._prevCx=game.cx;
  if(now-lastHud>100){hud();lastHud=now;}}
