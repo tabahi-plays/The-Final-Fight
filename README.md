@@ -41,3 +41,10 @@ Match intro order: selected fighter voice -> CPU voice -> 3, 2, 1, FIGHT. The wi
 
 Special audio files belong in `assets/audio/`:
 `bauna-intro.mp3`, `nimbu-intro.mp3`, `bauna-win.mp3`, `nimbu-win.mp3`.
+
+
+## Startup and BGM fix
+- Three.js loads from jsDelivr with an unpkg fallback.
+- Background music starts after ENTER THE SHOWDOWN and loops through menus and matches.
+- Music pauses on Pause and resumes on Resume.
+- Add `assets/audio/background-bgm.mp3` to supply your own music.

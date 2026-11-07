@@ -1,16 +1,41 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+let THREE;
+try {
+  THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+} catch (firstError) {
+  try {
+    THREE = await import('https://unpkg.com/three@0.160.0/build/three.module.js');
+  } catch (secondError) {
+    console.error('Three.js failed to load from both CDNs.', firstError, secondError);
+    const start = document.getElementById('startBtn');
+    if (start) { start.textContent = 'GAME ENGINE FAILED TO LOAD — REFRESH'; start.disabled = true; }
+    throw secondError;
+  }
+}
 const $=id=>document.getElementById(id),screens=['intro','select','arenas','fight','result'];
 let selected=0,arena='ground',game=null,scene,camera,renderer,clock,playerModel,cpuModel,beam,splash,keys={},paused=false,raf=0,lastHud=0,audioToken=0,currentVoice=null;
+// Background music starts on the first user gesture (browser autoplay policy).
+const bgm = new Audio('assets/audio/background-bgm.mp3');
+bgm.loop = true;
+bgm.volume = 0.32;
+bgm.preload = 'auto';
+let bgmStarted = false;
+function startBgm() {
+  bgmStarted = true;
+  bgm.play().catch(err => console.info('Add assets/audio/background-bgm.mp3 to enable BGM.', err));
+}
+function pauseBgm() { if (!bgm.paused) bgm.pause(); }
+function resumeBgm() { if (bgmStarted && bgm.paused) bgm.play().catch(()=>{}); }
+
 const fighters=[{name:'BAUNA KID',face:'assets/bauna-face.jpg',top:0x9d2638,short:true},{name:'NIMBU CHATORA',face:'assets/nimbu-face.jpg',top:0x126b9b,short:false}];
 function show(id){screens.forEach(s=>$(s).classList.toggle('hidden',s!==id));}
 function stopVoice(){audioToken++;if(currentVoice){currentVoice.pause();currentVoice.currentTime=0;currentVoice=null;}}
 function playVoice(file,token=audioToken){return new Promise(resolve=>{const a=new Audio('assets/audio/'+file);currentVoice=a;let settled=false;const finish=()=>{if(settled)return;settled=true;if(currentVoice===a)currentVoice=null;resolve();};a.addEventListener('ended',finish,{once:true});a.addEventListener('error',()=>setTimeout(finish,650),{once:true});a.play().then(()=>{}).catch(()=>setTimeout(finish,650));});}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-$('startBtn').onclick=()=>show('select');
+if($('startBtn')) $('startBtn').onclick=()=>{startBgm();show('select');};
 document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.pick);document.querySelectorAll('.fighter-select').forEach((c,i)=>c.classList.toggle('selected',i===selected));show('arenas');});
 $('backSelect').onclick=()=>show('select');
 document.querySelectorAll('[data-arena]').forEach(b=>b.onclick=()=>{arena=b.dataset.arena;startMatch();});
-$('pauseBtn').onclick=pause;$('resumeBtn').onclick=resume;$('mainMenuBtn').onclick=()=>{paused=false;stopScene();show('intro');};
+$('pauseBtn').onclick=pause;$('resumeBtn').onclick=resume;$('mainMenuBtn').onclick=()=>{paused=false;resumeBgm();stopScene();show('intro');};
 $('rematchBtn').onclick=()=>startMatch();$('newFightBtn').onclick=()=>{stopScene();show('select');};
 function mat(color,roughness=.7){return new THREE.MeshStandardMaterial({color,roughness});}
 function makeFighter(data,x,isCpu=false){
@@ -49,11 +74,11 @@ function setupScene(){const host=$('threeRoot');host.innerHTML='';scene=new THRE
  clock=new THREE.Clock();window.addEventListener('resize',resizeScene);}
 function resizeScene(){if(!renderer)return;const h=$('threeRoot');camera.aspect=h.clientWidth/h.clientHeight;camera.updateProjectionMatrix();renderer.setSize(h.clientWidth,h.clientHeight);}
 function stopScene(){stopVoice();if(raf)cancelAnimationFrame(raf);raf=0;if(renderer){renderer.dispose();renderer.domElement.remove();}renderer=null;scene=null;window.removeEventListener('resize',resizeScene);}
-async function startMatch(){stopScene();paused=true;$('pauseOverlay').classList.add('hidden');show('fight');game={ph:200,ch:200,ps:25,cs:25,pwins:0,cwins:0,round:1,time:60,over:false,intro:true,px:-1.8,cx:1.8,lastCpu:0,lastCpuMove:0,specialBusy:false,hitFlash:0};$('pName').textContent=fighters[selected].name;$('cName').textContent=fighters[1-selected].name+' · CPU';$('arenaName').textContent=arena==='ground'?'RISHRA FOOTBALL GROUND':'STEPPING STONE SCHOOL · RISHRA';$('arenaStage').style.backgroundImage=`url('${arena==='ground'?'assets/football-ground.png':'assets/stepping-stone-rishra.png'}')`;setupScene();hud();loop();const token=audioToken;callout(fighters[selected].name+'!');await playVoice(selected===0?'bauna-intro.mp3':'nimbu-intro.mp3',token);if(token!==audioToken||!game)return;callout(fighters[1-selected].name+' · CPU!');await playVoice(selected===0?'nimbu-intro.mp3':'bauna-intro.mp3',token);if(token!==audioToken||!game)return;for(const n of ['3','2','1','FIGHT!']){callout(n);await wait(n==='FIGHT!'?350:700);if(token!==audioToken||!game)return;}game.intro=false;paused=false;clock.getDelta();callout('ROUND 1 · FIGHT!');}
+async function startMatch(){startBgm();stopScene();paused=true;$('pauseOverlay').classList.add('hidden');show('fight');game={ph:200,ch:200,ps:25,cs:25,pwins:0,cwins:0,round:1,time:60,over:false,intro:true,px:-1.8,cx:1.8,lastCpu:0,lastCpuMove:0,specialBusy:false,hitFlash:0};$('pName').textContent=fighters[selected].name;$('cName').textContent=fighters[1-selected].name+' · CPU';$('arenaName').textContent=arena==='ground'?'RISHRA FOOTBALL GROUND':'STEPPING STONE SCHOOL · RISHRA';$('arenaStage').style.backgroundImage=`url('${arena==='ground'?'assets/football-ground.png':'assets/stepping-stone-rishra.png'}')`;setupScene();hud();loop();const token=audioToken;callout(fighters[selected].name+'!');await playVoice(selected===0?'bauna-intro.mp3':'nimbu-intro.mp3',token);if(token!==audioToken||!game)return;callout(fighters[1-selected].name+' · CPU!');await playVoice(selected===0?'nimbu-intro.mp3':'bauna-intro.mp3',token);if(token!==audioToken||!game)return;for(const n of ['3','2','1','FIGHT!']){callout(n);await wait(n==='FIGHT!'?350:700);if(token!==audioToken||!game)return;}game.intro=false;paused=false;clock.getDelta();callout('ROUND 1 · FIGHT!');}
 function hud(){$('pHealth').style.width=(game.ph/200*100)+'%';$('cHealth').style.width=(game.ch/200*100)+'%';$('pHp').textContent=Math.ceil(game.ph)+' HP';$('cHp').textContent=Math.ceil(game.ch)+' HP';$('pSpecial').style.width=game.ps+'%';$('cSpecial').style.width=game.cs+'%';$('roundLabel').textContent='ROUND '+game.round;$('timer').textContent=Math.ceil(game.time);}
 function callout(t){$('fightCallout').textContent=t;$('fightCallout').classList.remove('pop');void $('fightCallout').offsetWidth;$('fightCallout').classList.add('pop');}
-function pause(){if(!game||game.over||game.intro)return;paused=true;$('pauseOverlay').classList.remove('hidden');}
-function resume(){paused=false;$('pauseOverlay').classList.add('hidden');clock.getDelta();}
+function pause(){if(!game||game.over||game.intro)return;paused=true;pauseBgm();$('pauseOverlay').classList.remove('hidden');}
+function resume(){paused=false;resumeBgm();$('pauseOverlay').classList.add('hidden');clock.getDelta();}
 function distance(){return Math.abs(game.cx-game.px);}
 function triggerAttack(who,type){
  if(!game||game.over||paused||game.specialBusy)return;
@@ -88,7 +113,7 @@ function triggerAttack(who,type){
 }
 
 function action(type){if(!game||game.over||paused||game.specialBusy)return;if(type==='special'){special('p');return;}if(type==='block'){playerModel.userData.block=true;return;}triggerAttack('p',type);}
-function special(who){
+async function special(who){
  if(!game||game.over||paused)return;
  const isP=who==='p',meter=isP?'ps':'cs';
  if(game[meter]<100||game.specialBusy)return;

@@ -1,0 +1,2 @@
+Put your background music MP3 in this folder and name it exactly background-bgm.mp3.
+It starts after ENTER THE SHOWDOWN, loops through the game, pauses with Pause and resumes with Resume.

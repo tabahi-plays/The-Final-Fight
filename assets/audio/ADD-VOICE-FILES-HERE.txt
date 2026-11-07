@@ -1,0 +1,2 @@
+Optional voice MP3s: bauna-intro.mp3, nimbu-intro.mp3, bauna-win.mp3, nimbu-win.mp3.
+Background music: background-bgm.mp3
